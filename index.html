@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Resonix - Web Player: Music for everyone</title>
+    <script src="https://kit.fontawesome.com/24f6cb2af0.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container flex bg-black">
+        <div class="left">
+            <div class="close">
+                <img width="30" class="invert" src="img/close.svg" alt="">
+            </div>
+            <div class="home bg-grey rounded m-1 p-1">
+                <div id = "header-title"><i class="fa-brands fa-napster"></i> Resonix</div>
+                <ul>
+                    <form id="search-song">
+                        <input type="text" placeholder="Search" name="search" id="search">
+                        <button type="submit" id="search-btn">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </form>
+                </ul>
+            </div>
+
+            <div class="library bg-grey rounded m-1 p-1">
+                <div class="heading">
+                    <img id = "back" class="invert" src="img/playlist.svg" alt="">
+                    <h2>Your Library</h2>
+                </div>
+
+                <div id="songList">
+                    <ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="right bg-grey rounded">
+            <div class="header">
+                <div class="nav">
+                    <i id = "back_button" class="fa-solid fa-arrow-left" style = "display: none;" onclick = "return go_back()"></i> 
+                    <i id = "exit_button" class="fa-solid fa-xmark" style = "display: none;" onclick = "return cross()"></i> 
+                </div>
+                <div id="buttons">
+                    <button class="signupbtn">Sign up</button>
+                    <button class="loginbtn">Log in</button>
+                </div>
+            </div>
+
+            <div class="Playlists">
+                <div>
+                    <h1>Resonix Playlists</h1>
+                    
+                    <div class="cardContainer">
+                        <div class="card" onclick = "return show_punjabi()">
+                            <img src="img/playlist/punjab.jpeg" alt="Punjabi Songs Playlist">
+                            <h2>Punjabi Songs Playlist</h2>
+                        </div>
+                        <div class="card" onclick = "return show_pop()">
+                            <img src="img/playlist/pop.jpeg" alt="Pop Songs Playlist">
+                            <h2>Pop Songs Playlist</h2>
+                        </div>
+                        <div class="card" onclick = "return show_bollywood()">
+                            <img src="img/playlist/bollywood.jpg" alt="Bollywood Songs Playlist">
+                            <h2>Bollywood Songs Playlist</h2>
+                        </div>
+                        <div class="card" onclick = "return show_romance()">
+                            <img src="img/playlist/romance.webp" alt="Romance Songs Playlist">
+                            <h2>Romance Songs Playlist</h2>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h1>Artist Playlists</h1>
+                    
+                    <div class="cardContainer">
+                         
+                        <div class="card" onclick = "return show_shubh()">
+                            <img src="img/playlist/shubh.jpg" alt="Shubh Best Hits">
+                            <h2>Shubh Best Hits</h2>
+                        </div>
+                        <div class="card" onclick = "return show_arijit()">
+                            <img src="img/playlist/arijit.jpg" alt="Arijit Singh Best Hits">
+                            <h2>Arijit Singh Best Hits</h2>
+                        </div>
+                        <div class="card" onclick = "return show_diljeet()">
+                            <img src="img/playlist/diljeet.jpg" alt="Diljeet Dosahnj Best Hits">
+                            <h2>Diljeet Dosanjh Best Hits</h2>
+                        </div>
+                        <div class="card" onclick = "return show_ed()">
+                            <img src="img/playlist/ed.jpg" alt="Ed Sherran Best Hits">
+                            <h2>Ed Sheeran Best Hits</h2>
+                        </div>
+                        <div class="card" onclick = "return show_honey()">
+                            <img src="img/playlist/honey_singh.jpeg" alt="Honey Singh Best Hits">
+                            <h2>Honey Singh Best Hits</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="song-table-container" style="display: none;">
+                <div id="preview" style="display: none">
+                </div>                
+                <div id = "song-table-header">
+                    <div class = "s-tag">#</div>
+                    <div class = "s-title">Title</div>
+                    <div class = "s-artist">Artist</div>
+                    <div class = "s-views">Views</div>
+                    <div class = "s-duration">Duration</div>
+                </div>
+                <hr style = "margin: 10px;">
+                <div id = "song-table">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class= "playbar">
+        <div id = "song-info">
+            <i class="fa-solid fa-backward-step"onclick="return play_previous()" ></i>
+            <span id = "song-title">
+                
+            </span>
+            <i class="fa-solid fa-forward-step" onclick="return play_next()"></i>
+            <i class="fa-solid fa-circle-plus" onclick="return add_to_playlist()" style = "display: none;"></i>
+        </div>
+        
+        <audio controls loop >
+            <source id = "currernt_song">
+        </audio>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal" style="display: none;">
+        <form  method="POST" class="login-form" >
+            <h2>Login</h2>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="button" class="loginbtn" id="login-btn">Log in</button>
+        </form>
+    </div> 
+
+    <!-- Signup Modal -->
+    <div class="signup-modal" id="signupModal" style="display: none;" >
+        <form method="POST" class="signup-form">
+            <h2>Sign Up</h2>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" maxlength="10" required>
+
+            <label for="new-email">Email:</label>
+            <input type="email" id="new-email" name="email" required>
+
+            <label for="new-password">Password:</label>
+            <input type="password" id="new-password" name="password" required>
+
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirm_password" required>
+
+            <button type="button" class="signupbtn" id = "signup-btn">Sign Up</button>
+        </form>
+    </div>
+    <div class="playlist-modal" id="playlistModal" style="display: none;">
+        <div class="modal-content">
+            <h2>Manage Playlists</h2>
+            <div>
+                <button id="add-to-existing-playlist">Add to Existing Playlist</button>
+                <div id="existing-playlist-dropdown" style="display: none;">
+                    <label for="existing-playlists">Select Playlist:</label>
+                    <select id="existing-playlists"></select>
+                    <button id="add-to-selected-playlist">Add</button>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <button id="create-new-playlist">Create New Playlist</button>
+                <div id="new-playlist-form" style="display: none;">
+                    <label for="new-playlist-name">Enter Playlist Name:</label>
+                    <input type="text" id="new-playlist-name">
+                    <button id="save-new-playlist">Create</button>
+                </div>
+            </div>
+            <button id="close-modal">Cancel</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
