@@ -1,106 +1,82 @@
 # Resonix
 
-Resonix is a **Spotify-inspired music streaming platform** built with vanilla HTML, CSS, and JavaScript. It replicates core Spotify features including music playback, playlist browsing, search, user authentication, and playlist management.
+Resonix is a **Spotify-inspired music streaming app** built with **React + Vite**. Browse genre and artist playlists, search songs, play audio, log in / sign up (localStorage, no backend), and manage your own playlists.
 
 ## Features
 
-- **Music Playback** - Full-featured audio player with play/pause, next/previous, progress bar
-- **Playlist Browsing** - Curated playlists by genre (Punjabi, Pop, Bollywood, Romance) and artist (Shubh, Arijit Singh, Diljit Dosanjh, Ed Sheeran, Honey Singh)
-- **Search** - Real-time song search functionality
-- **User Authentication** - Login and signup modals with form validation
-- **Library Management** - Personal library with "Your Library" section
-- **Playlist Management** - Create new playlists, add songs to existing playlists
-- **Responsive Design** - Works on desktop and mobile
+- **Music Playback** — audio player with next / previous, auto-advance on end, no autoplay until you pick a song
+- **Playlists** — Punjabi, Pop, Bollywood, Romance + artist hits (Shubh, Arijit Singh, Diljit Dosanjh, Ed Sheeran, Honey Singh)
+- **Search** — filter by title or artist, with empty-state message
+- **Auth without PHP** — signup / login stored in `localStorage`, seeded demo users, validation + error messages
+- **Your Library** — per-user playlists, create new, add current song (with alerts if nothing selected)
+- **Responsive dark UI**
 
 ## Tech Stack
 
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript (ES6+)
-- **Backend**: PHP (login.php, signup.php)
-- **Icons**: Font Awesome 6
-- **Fonts**: Custom fonts via CSS
+- **React 18 + Vite 5**
+- **No backend / no PHP** — auth + playlists persist in browser `localStorage`
+- Vanilla CSS (`src/index.css`)
 
 ## Project Structure
 
 ```
 Resonix/
-├── index.html          # Main application entry point
-├── style.css           # All styling
-├── script.js           # Core application logic (856 lines)
-├── login.php           # Login authentication endpoint
-├── signup.php          # User registration endpoint
-├── temp.js             # Additional utilities
-├── music/              # Audio files organized by artist
-│   ├── Shubh/
-│   ├── Honey Singh/
-│   ├── Arijit Singh/
-│   ├── Diljeet Dosanjh/
-│   ├── Ed Sheeran/
-│   ├── Bollywood/
-│   └── Romance/
-└── img/                # Images and icons
-    ├── playlist/       # Playlist cover art
-    └── *.svg           # UI icons
+├── index.html            # Vite entry
+├── package.json
+├── vite.config.js
+├── .gitignore
+├── public/
+│   ├── img/              # cover art, icons, playlist images
+│   └── music/            # mp3 files by artist (~135 MB)
+└── src/
+    ├── main.jsx
+    ├── App.jsx           # layout, player, search, modals
+    ├── index.css
+    ├── data/songs.js     # song catalog + playlist definitions
+    └── hooks/useAuth.js  # localStorage auth + user playlists
 ```
 
 ## Getting Started
 
-### Prerequisites
-- A local web server (PHP support required for auth)
-- Modern web browser
-
-### Installation
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/kakul-aeron/Resonix.git
 cd Resonix
+npm install
+npm run dev
 ```
 
-2. Start a local server with PHP support:
+Open `http://localhost:5173`.
+
+Production build:
+
 ```bash
-# Using PHP built-in server
-php -S localhost:8000
-
-# Or use any other server (Apache, Nginx, etc.)
+npm run build
+npm run preview
 ```
 
-3. Open `http://localhost:8000` in your browser
+## Demo Accounts
 
-## Key Components
+- `aryan@gmail.com` / `aryan123`
+- `ansh@gmail.com` / `ansh123`
 
-### Song Class (`script.js:39-57`)
-Represents a track with title, artist, views, duration, and source path. Includes a `play()` method that loads the audio into the player.
+Or sign up for a new account — it's stored locally.
 
-### Playlists
-- **Genre-based**: Punjabi, Pop, Bollywood, Romance
-- **Artist-based**: Shubh, Arijit Singh, Diljit Dosanjh, Ed Sheeran, Honey Singh
+## Bug Fixes (React migration)
 
-### Authentication Flow
-- Click "Log in" or "Sign up" in header → Opens modal
-- Forms submit to `login.php` / `signup.php`
-- Client-side validation for password matching (signup)
+- Removed PHP (`login.php`, `signup.php`) and legacy `script.js` / `temp.js` / `style.css`.
+- Catalog in `src/data/songs.js` only lists mp3s actually present in `public/music` — old build referenced missing tracks (e.g. removed Arijit entries, empty Punjabi folder remapped to existing songs).
+- Fixed playlist open autoplaying track 1 before user clicked; now opens paused.
+- Fixed audio element keeping old `src` after clearing queue / search; now pauses + unloads when nothing selected.
+- Fixed `currentSong` returning `undefined` out of bounds; now normalized to `null`.
+- Fixed next/prev with functional state updates (no stale closure on `onEnded`).
+- Fixed user-playlist sync wiping selection; now clamps index into range.
+- Fixed silent no-op when adding with no playlist selected; now alerts.
+- Fixed `loadUsers` crashing when `localStorage` is unavailable/corrupt; now falls back to in-memory seed.
+- Added `.gitignore` (`node_modules/`, `dist/`).
 
-### Playlist Management
-- Click "+" icon on playing song → Opens playlist modal
-- Choose "Add to Existing Playlist" or "Create New Playlist"
-- Playlists persist in localStorage
+## Notes
 
-## Screenshots
-
-*(Add screenshots here if available)*
-
-## Future Improvements
-
-- [ ] Backend database integration (MySQL/PostgreSQL)
-- [ ] User sessions & persistent login
-- [ ] Liked songs / favorites
-- [ ] Playlist sharing
-- [ ] Mobile app version
-- [ ] Recommendation engine
-
-## License
-
-This project is for educational purposes. Music content belongs to respective artists and labels.
+- Music files live under `public/music` and are committed to git (~135 MB total, each file well under GitHub's 100 MB per-file limit).
+- Music content belongs to respective artists/labels, for educational use.
 
 ## Author
 
